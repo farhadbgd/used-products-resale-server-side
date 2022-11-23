@@ -11,16 +11,29 @@ app.use(cors());
 app.use(express.json());
 
 // database connection
-
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.kliinjg.mongodb.net/?retryWrites=true&w=majority`;
-console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-    const collection = client.db("test").collection("devices");
-    // perform actions on the collection object
-    client.close();
-});
+
+
+// crud functions
+async function run() {
+    try {
+
+    }
+    finally {
+
+    }
+}
+run().catch(console.log);
+
+
+
+
+
+
+
+
+
 
 
 app.get('/', (req, res) => {
