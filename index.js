@@ -25,6 +25,7 @@ async function run() {
             const query = {}
             const cursor = booksCollection.find(query)
             const books = await cursor.toArray()
+
             res.send(books)
         })
 
