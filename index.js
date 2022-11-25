@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -20,13 +20,34 @@ async function run() {
     try {
         // collections
         const booksCollection = client.db('bookWorld').collection('books');
+        const booksCategory = client.db('bookWorld').collection('category');
 
         app.get('/books', async (req, res) => {
             const query = {}
             const cursor = booksCollection.find(query)
             const books = await cursor.toArray()
-
             res.send(books)
+        })
+        app.get('/category', async (req, res) => {
+            const query = {}
+            const cursor = booksCategory.find(query)
+            const category = await cursor.toArray()
+            res.send(category)
+        })
+        // show products category wise
+        app.get('/categories/:category', async (req, res) => {
+            const category = req.params.category;
+            const query = { category: category }
+            const cursor = booksCollection.find(query)
+            const categoriesBook = await cursor.toArray()
+            res.send(categoriesBook)
+        })
+        app.get('/category/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const booking = await booksCollection.findOne(query);
+            res.send(booking);
+
         })
 
 
