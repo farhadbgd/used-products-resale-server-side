@@ -21,12 +21,28 @@ async function run() {
         // collections
         const booksCollection = client.db('bookWorld').collection('books');
         const booksCategory = client.db('bookWorld').collection('category');
+        const bookingCollection = client.db('bookWorld').collection('booking');
 
         app.get('/books', async (req, res) => {
             const query = {}
             const cursor = booksCollection.find(query)
             const books = await cursor.toArray()
             res.send(books)
+        })
+        // add a product
+        app.post('/books', async (req, res) => {
+            const product = req?.body;
+            const result = await booksCollection.insertOne(product);
+            res.send(result);
+
+        })
+        // booking collection
+        app.post('/bookings', async (req, res) => {
+            const booking = req?.body;
+            console.log(booking);
+            const result = await bookingCollection.insertOne(booking);
+            res.send(result);
+
         })
         app.get('/category', async (req, res) => {
             const query = {}
