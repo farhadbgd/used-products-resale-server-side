@@ -65,6 +65,23 @@ async function run() {
             res.send(booking);
 
         })
+        // get my product
+        app.get('/categories/:category', async (req, res) => {
+            const category = req.params.category;
+            const query = { category: category }
+            const cursor = booksCollection.find(query)
+            const categoriesBook = await cursor.toArray()
+            res.send(categoriesBook)
+        })
+        app.get('/myproducts/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const cursor = booksCollection.find(query);
+            const myproducts = await cursor.toArray();
+            console.log(myproducts)
+            res.send(myproducts);
+
+        })
 
 
 
