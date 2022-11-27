@@ -3,6 +3,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
+const stripe = require("stripe")('sk_test_51M8t4dBPikRh9K5xPXkCouuUOV2vSsodd0JvZwgjqiYcu85LQAcz2nxcvTtnOS6BAVLpCCSS7m3RVs3gCP1FlpvA00IbGf2SdW');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -22,6 +23,7 @@ async function run() {
         const booksCollection = client.db('bookWorld').collection('books');
         const booksCategory = client.db('bookWorld').collection('category');
         const bookingCollection = client.db('bookWorld').collection('booking');
+        const paymentsCollection = client.db('bookWorld').collection('payments');
 
         app.get('/books', async (req, res) => {
             const query = {}
@@ -132,7 +134,38 @@ async function run() {
         })
 
 
+        // payment
 
+        app.post('/create-payment-intent', async (req, res) => {
+            const booking = req.body;
+            const price = booking.price;
+            const amount = price * 100;
+            const paymentIntent = await stripe.paymentIntents.create({
+                currency: 'usd',
+                amount: amount,
+                "payment_method_types": [
+                    "card"
+                ]
+            });
+            res.send({
+                clientSecret: paymentIntent.client_secret,
+            });
+        });
+
+        app.post('/payments', async (req, res) => {
+            const payment = req.body;
+            const result = await paymentsCollection.insertOne(payment);
+            const id = payment.bookingId
+            const filter = { _id: ObjectId(id) }
+            const updatedDoc = {
+                $set: {
+                    paid: true,
+                    transactionId: payment.transactionId
+                }
+            }
+            const updatedResult = await bookingCollection.updateOne(filter, updatedDoc)
+            res.send(updatedResult);
+        })
 
 
 
