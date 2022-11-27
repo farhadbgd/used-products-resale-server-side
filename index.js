@@ -51,11 +51,33 @@ async function run() {
             res.send(booking)
 
         })
+        app.get('/bookings/:id', async (req, res) => {
+            const id = req?.params.id;
+            const filter = { _id: ObjectId(id) };
+            console.log(id);
+
+            const booking = await bookingCollection.findOne(filter)
+            // const booking = await cursor.toArray()
+            res.send(booking)
+
+        })
         app.delete('/books/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) };
             const result = await booksCollection.deleteOne(filter);
             res.send(result);
+        })
+        app.get('/books/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email }
+            const user = await booksCollection.findOne(query);
+            res.send({ isAdmin: user?.role === 'admin' });
+        })
+        app.get('/books/seller/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email }
+            const user = await booksCollection.findOne(query);
+            res.send({ isSeller: user?.role === 'seller' });
         })
         app.delete('/bookings/:id', async (req, res) => {
             const id = req.params.id;
