@@ -50,7 +50,18 @@ async function run() {
             const booking = await cursor.toArray()
             res.send(booking)
 
-
+        })
+        app.delete('/books/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const result = await booksCollection.deleteOne(filter);
+            res.send(result);
+        })
+        app.delete('/bookings/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const result = await bookingCollection.deleteOne(filter);
+            res.send(result);
         })
         app.get('/category', async (req, res) => {
             const query = {}
