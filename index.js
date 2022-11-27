@@ -44,6 +44,14 @@ async function run() {
             res.send(result);
 
         })
+        app.get('/bookings', async (req, res) => {
+            const query = {}
+            const cursor = bookingCollection.find(query)
+            const booking = await cursor.toArray()
+            res.send(booking)
+
+
+        })
         app.get('/category', async (req, res) => {
             const query = {}
             const cursor = booksCategory.find(query)
@@ -78,10 +86,20 @@ async function run() {
             const query = { email: email };
             const cursor = booksCollection.find(query);
             const myproducts = await cursor.toArray();
-            console.log(myproducts)
             res.send(myproducts);
 
         })
+        app.get('/myorders/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const cursor = bookingCollection.find(query);
+            const myorders = await cursor.toArray();
+            res.send(myorders);
+
+        })
+
+
+
 
 
 
