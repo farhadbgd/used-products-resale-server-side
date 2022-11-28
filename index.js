@@ -177,15 +177,6 @@ async function run() {
 run().catch(console.log);
 
 
-
-
-
-
-
-
-
-
-
 app.get('/', (req, res) => {
     res.send('Wow server is running');
 });
