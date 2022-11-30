@@ -38,6 +38,20 @@ async function run() {
             res.send(result);
 
         })
+        // seller verification
+        app.put('/books/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id);
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    status: "verified",
+                },
+            };
+            const result = await booksCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
         // booking collection
         app.post('/bookings', async (req, res) => {
             const booking = req?.body;
@@ -56,19 +70,18 @@ async function run() {
         app.get('/bookings/:id', async (req, res) => {
             const id = req?.params.id;
             const filter = { _id: ObjectId(id) };
-            console.log(id);
-
             const booking = await bookingCollection.findOne(filter)
-            // const booking = await cursor.toArray()
             res.send(booking)
 
         })
         app.delete('/books/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) };
+            console.log(filter);
             const result = await booksCollection.deleteOne(filter);
             res.send(result);
         })
+
         app.get('/books/admin/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email }
